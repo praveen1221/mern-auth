@@ -29,7 +29,7 @@ export default function SignIn() {
       dispatch(signInFailure(data))
       return;
     }
-    dispatch(signInSuccess())
+    dispatch(signInSuccess(data))
     navigate('/')
   }
   catch(err){
