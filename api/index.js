@@ -12,6 +12,7 @@ mongoose.connect(process.env.MONGO).then(()=>{
 
 const app = express()
 app.use(express.json())
+app.use('./../images',express.static('images'))
 
 app.listen(3000,()=>{
     console.log('server running on port 3000')

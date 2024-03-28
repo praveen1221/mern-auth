@@ -1,40 +1,41 @@
 import { useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
-import { signInStart,signInFailure,signInSuccess } from '../redux/user/userSlice';
+import { Link, useNavigate } from 'react-router-dom';
+import { signInStart, signInFailure, signInSuccess } from '../redux/user/userSlice';
 import { useDispatch, useSelector } from 'react-redux';
+import OAuth from '../components/OAuth';
 
 export default function SignIn() {
 
-  const [formData,setFormData] = useState({})
-  const {loader,errorMsg} = useSelector((state) => state.user)
+  const [formData, setFormData] = useState({})
+  const { loader, errorMsg } = useSelector((state) => state.user)
   const navigate = useNavigate()
   const dispatch = useDispatch()
   const handleChange = (e) => {
-    setFormData({...formData,[e.target.id]:e.target.value})
+    setFormData({ ...formData, [e.target.id]: e.target.value })
   }
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    try{
-    dispatch(signInStart())
-    const res = await fetch('/api/auth/signin',{
-      method:'POST',
-      headers:{
-        'Content-Type' : 'application/json'
-      },
-      body: JSON.stringify(formData)
-    })
-    const data = await res.json()
-    if(data?.success === false){
-      dispatch(signInFailure(data))
-      return;
+    try {
+      dispatch(signInStart())
+      const res = await fetch('/api/auth/signin', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
+      })
+      const data = await res.json()
+      if (data?.success === false) {
+        dispatch(signInFailure(data))
+        return;
+      }
+      dispatch(signInSuccess(data))
+      navigate('/')
     }
-    dispatch(signInSuccess(data))
-    navigate('/')
-  }
-  catch(err){
-    dispatch(signInFailure(err))
-  }
+    catch (err) {
+      dispatch(signInFailure(err))
+    }
   }
 
   return (
@@ -56,8 +57,9 @@ export default function SignIn() {
           onChange={handleChange}
         />
         <button disabled={loader} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
-        {loader ? "Loading..." : "Sign In"}
+          {loader ? "Loading..." : "Sign In"}
         </button>
+        <OAuth loader={loader} />
       </form>
       <div className='flex gap-2 mt-5'>
         <p>Dont Have an account?</p>
