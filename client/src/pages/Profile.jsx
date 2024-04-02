@@ -48,6 +48,15 @@ export default function Profile() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const { email } = formData
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (email && !emailRegex.test(email)) {
+      alert('Please Enter Valid Email to Update')
+      return;
+    }
+
     try {
       dispatch(signInStart())
       const res = await fetch(`/api/user/update/${currentUser._id}`, {
@@ -150,8 +159,9 @@ export default function Profile() {
           type='email'
           id='email'
           placeholder='Email'
-          className='bg-slate-100 rounded-lg p-3'
+          className='bg-slate-100 rounded-lg p-3 cursor-not-allowed'
           onChange={onHandleChange}
+          disabled={true}
         />
         <input
           type='password'

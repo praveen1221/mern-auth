@@ -11,6 +11,7 @@ export const test = (req, res) => {
 // update user
 
 export const updateUser = async (req, res, next) => {
+
   if (req.user.id !== req.params.id) {
     return next(errorHandler(401, 'You can update only your account!'));
   }
@@ -19,13 +20,18 @@ export const updateUser = async (req, res, next) => {
       req.body.password = bcryptjs.hashSync(req.body.password, 10);
     }
 
+    const userNameDuplicate = await User.findOne({ userName: req.body.username })
+
+    if (userNameDuplicate && userNameDuplicate?._id != req.params.id) return next(errorHandler(401, 'Username already Exists'));
+
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.id,
       {
         $set: {
-          userName: req.body.username,
-          email: req.body.email,
-          password: req.body.password,
+          userName: req.body.username || undefined,
+          email: req.body.email || undefined,
+          password: req.body.password || undefined,
           profilePicture: req.body.profilePicture,
         },
       },

@@ -1,34 +1,49 @@
 import { useState } from 'react';
-import { Link,useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import OAuth from '../components/OAuth';
+import { signInStart, signInFailure, signInSuccess } from '../redux/user/userSlice';
+import { useDispatch, useSelector } from 'react-redux';
 
 export default function SignUp() {
 
-  const [formData,setFormData] = useState({})
-  const [loader,setLoader] = useState(false)
-  const [errorMsg,setErrorMsg] = useState(false)
+  const { loader, errorMsg } = useSelector((state) => state.user)
+  const dispatch = useDispatch()
+
+  const [formData, setFormData] = useState({})
   const navigate = useNavigate()
   const handleChange = (e) => {
-    setFormData({...formData,[e.target.id]:e.target.value})
+    setFormData({ ...formData, [e.target.id]: e.target.value })
   }
 
-  const handleSubmit = async(e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    setLoader(true)
-    setErrorMsg(false)
-    const res = await fetch('/api/auth/signup',{
-      method:'POST',
-      headers:{
-        'Content-Type' : 'application/json'
+    const { email, password, userName } = formData
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    if (!email || !password || !userName) {
+      alert('Please Enter All the Fields')
+      return;
+    }
+    if (!emailRegex.test(email)) {
+      alert('Please Enter Valid Email')
+      return;
+    }
+    dispatch(signInStart())
+
+    const res = await fetch('/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify(formData)
     })
     const data = await res.json()
-    setLoader(false)
-    if(!data?.success){
-      setErrorMsg(true)
+    if (!data?.success) {
+      dispatch(signInFailure(data))
       return;
     }
+    dispatch(signInSuccess())
     navigate('/signin')
   }
 
@@ -58,7 +73,7 @@ export default function SignUp() {
           onChange={handleChange}
         />
         <button disabled={loader} className='bg-slate-700 text-white p-3 rounded-lg uppercase hover:opacity-95 disabled:opacity-80'>
-        {loader ? "Loading..." : "Sign Up"}
+          {loader ? "Loading..." : "Sign Up"}
         </button>
         <OAuth loader={loader} />
       </form>
@@ -69,7 +84,7 @@ export default function SignUp() {
         </Link>
       </div>
 
-      <p className='text-red-700 mt-5'>{errorMsg && "Something went wrong!!"}</p>
+      <p className='text-red-700 mt-5'>{errorMsg ? errorMsg.message || "Something went wrong!!" : ""}</p>
     </div>
   );
 }
