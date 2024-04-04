@@ -29,10 +29,13 @@ export default function About() {
               My app focuses solely on providing a seamless and secure authentication experience for my users.
               Whether you're signing up for the first time or logging in to access your account, we prioritize simplicity,
               security, and user convenience.</p>
+
+              <Link to='/profile' className='text-blue-500 underline'> Click here</Link> or on User to check Profile Page.
+
           </>
           :
           <p className='mb-4 text-slate-700'>
-            Please <Link to='/profile' className='text-blue-500 underline'> Sign In</Link> to check this Page
+            Please <Link to='/profile' className='text-blue-500 underline'> Sign In</Link> to check About and Profile Page.
           </p>
       }
     </div>
