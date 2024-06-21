@@ -16,6 +16,14 @@ export default function SignIn() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+
+    const { email, password } = formData
+
+    if (!email || !password ) {
+      alert('Please Enter All the Fields')
+      return;
+    }
+
     try {
       dispatch(signInStart())
       const res = await fetch('/api/auth/signin', {

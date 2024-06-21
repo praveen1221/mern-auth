@@ -17,8 +17,9 @@ export default function About() {
               This is a full-stack web application built with the MERN (MongoDB,
               Express, React, Node.js) stack. It includes authentication features that
               allow users to sign up, log in, and log out, and provides access to
-              protected routes only for authenticated users.
+              protected routes only for authenticated users (The Profile Page).
             </p>
+
             <p className='mb-4 text-slate-700'>
               The front-end of the application is built with React and uses React
               Router for client-side routing. The back-end is built with Node.js and
@@ -30,12 +31,15 @@ export default function About() {
               Whether you're signing up for the first time or logging in to access your account, we prioritize simplicity,
               security, and user convenience.</p>
 
-              <Link to='/profile' className='text-blue-500 underline'> Click here</Link> or on User to check Profile Page.
+            <Link to='/profile' className='text-blue-500 underline'> Click here</Link> or on User to check Profile Page.
 
+            <p className='mb-4 text-slate-700'>
+              Since you've already logged in, you can try changing your Profile Image in the Profile Page
+            </p>
           </>
           :
           <p className='mb-4 text-slate-700'>
-            Please <Link to='/profile' className='text-blue-500 underline'> Sign In</Link> to check About and Profile Page.
+            Please <Link to='/profile' className='text-blue-500 underline'> Sign In</Link> to check the About and Profile Page.
           </p>
       }
     </div>
